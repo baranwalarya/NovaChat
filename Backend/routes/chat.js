@@ -1,6 +1,6 @@
 import express from "express"
 import Thread from "../models/Thread.js"
-
+import getOpenAIAPIResponse from "../utils/openai.js"
 
 const router=express.Router()
 
@@ -50,8 +50,11 @@ router.get("/thread/:threadId",async (req,res) => {
 })
 
 router.delete("/thread/:threadId",async (req,res) => {
+
+    const {threadId}=req.params
+
     try {
-        const deleteThread=await Thread.findByIdAndDelete({threadId})
+        const deleteThread=await Thread.findOneAndDelete({threadId})
 
         if(!deleteThread){
             res.status(404).json({error:"Thread could not be deleted"})
@@ -60,6 +63,41 @@ router.delete("/thread/:threadId",async (req,res) => {
     } catch (error) {
         console.log(error)  
         res.status(500).json({error:"Failed to delete threads"})
+    }
+})
+
+router.post("/chat",async (req,res) => {
+
+    const {threadId,message}=req.body
+
+    if(!threadId || !message){
+        res.status(500).json({error:"Missing required fields"})
+    }
+
+    try {
+        const thread=await Thread.findOne({threadId})
+
+        if(!thread){
+            // create new thread
+            thread=new thread({
+                threadId,
+                title:message,
+                messages:[{role:"user",content:message}]
+            })
+        }else{
+            thread.messages.push({role:"user",content:message})
+        }
+
+        const assistantReply = await getOpenAIAPIResponse(message)
+
+        thread.messages.push({role:"assistant",content:assistantReply})
+        thread.updatedAt = new Date()
+        await thread.save()
+        res.json({reply:assistantReply})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error:"Something went wrong"})
     }
 })
 
