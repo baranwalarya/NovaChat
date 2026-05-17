@@ -1,20 +1,8 @@
-import express from "express"
 import "dotenv/config"
-import cors from "cors"
+import { get } from "mongoose"
 
-const app=express();
-const PORT = 8080;
-
-app.use(express.json());
-app.use(cors());
-
-app.listen(PORT, () => {
-    console.log(`Server is running on ${PORT}`)
-})
-
-app.post("/test",async (req,res) => {
-
-   const options={
+const getOpenAIAPIResponse = async (message) => {
+    const options={
     method:"POST",
     headers: {
         "Content-Type": "application/json",
@@ -24,7 +12,7 @@ app.post("/test",async (req,res) => {
         model: "gemini-2.5-flash",
         messages: [{
             role: "user",
-            content: req.body.message
+            content: message
             }]
     })
    }
@@ -32,10 +20,10 @@ app.post("/test",async (req,res) => {
     try {
         const response=await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",options)
         const data=await response.json()
-        // console.log(data.choices[0].message.content)
-        res.send(data.choices[0].message.content)
+        return data.choices[0].message.content
     } catch (error) {
         console.log(error)
     }
-})
+}
 
+export default getOpenAIAPIResponse
