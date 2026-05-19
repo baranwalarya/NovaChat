@@ -7,7 +7,20 @@ import { useContext } from "react";
 import { MyContext } from "./MyContext.jsx";
 
 const ChatWindow = () => {
-  const { setSidebarOpen, sidebarOpen } = useContext(MyContext)
+  const { setSidebarOpen, sidebarOpen, prompt, setPrompt, reply, setReply, currentThreadId, setCurrentThreadId } = useContext(MyContext)
+
+  const getReply = async () => {
+    const options = {
+      method:"POST",
+      headers:{
+        "Content-Type" : "application/json"
+      },
+      body: {
+        message:prompt,
+        threadId:currentThreadId
+      }
+    }
+  }
 
   return (
     <div className="bg-[#212121] h-screen w-full flex flex-col justify-between text-center overflow-hidden pl-[60px] sm:pl-0">
@@ -35,12 +48,12 @@ const ChatWindow = () => {
       <div className="w-full px-[20px] sm:px-[40px] md:px-[80px] lg:px-[120px] xl:px-[200px] pb-[20px]">
         <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-2">
           <input
-            placeholder="Ask anything"
+            placeholder="Ask anything" value={prompt} onChange={(e) => setPrompt(e.target.value)}
             className="bg-transparent text-white outline-none flex-1 p-[20px]"
           />
           <div
             id="submit"
-            className="cursor-pointer text-white/80 flex items-center h-[35px] w-[35px] text-[20px] hover:text-[#fff]"
+            className="cursor-pointer text-white/80 flex items-center h-[35px] w-[35px] text-[20px] hover:text-[#fff]" onClick={getReply}
           >
             <IoSend />
           </div>
