@@ -30,9 +30,9 @@ const ChatWindow = () => {
             <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-2">                               {/* Useer Input */}
               <input placeholder="Ask anything" className="bg-transparent text-white outline-none flex-1 p-[20px] "/>
 
-              <div id="submit" className="cursor-pointer text-white flex items-center"><IoSend /></div>
+              <div id="submit" className="cursor-pointer text-white flex items-center h-[35px] w-[35px] text-[20px]"><IoSend /></div>
             </div>
-            <p className="pt-5">                      {/* Info */}  
+            <p className="pt-5 text-[#b4b4b4] text-[0.8rem]">                      {/* Info */}  
                 NovaChat can make mistakes. Check important info. See Cookie Preferences.
             </p>
         </div>
