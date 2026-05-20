@@ -3,37 +3,50 @@ import { FaChevronDown } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import { RiMenu3Line } from "react-icons/ri";
-import { useContext } from "react";
+import { useContext,useState } from "react";
 import { MyContext } from "./MyContext.jsx";
+import { ClipLoader } from "react-spinners"
 
 const ChatWindow = () => {
   const { setSidebarOpen, sidebarOpen, prompt, setPrompt, reply, setReply, currentThreadId, setCurrentThreadId } = useContext(MyContext)
+  const [loading,setLoading] = useState(false)
 
   const getReply = async () => {
+    setLoading(true)
+    console.log("message ", prompt, "threadId" , currentThreadId)
     const options = {
       method:"POST",
       headers:{
         "Content-Type" : "application/json"
       },
-      body: {
+      body: JSON.stringify({
         message:prompt,
         threadId:currentThreadId
-      }
+      })
     }
+
+    try {
+      const response= await fetch("http://localhost:8080/api/chat",options)
+      const res=await response.json()
+      console.log(res)
+      setReply(res.reply)
+    } catch (error) {
+      console.log(error)
+    }
+    setLoading(false)
   }
 
   return (
     <div className="bg-[#212121] h-screen w-full flex flex-col justify-between text-center overflow-hidden pl-[60px] sm:pl-0">
 
       {/* Navbar */}
-      <div className="w-full flex justify-between items-center cursor-pointer">
+      <div className="w-full flex justify-between items-center      cursor-pointer">
         <span className="flex items-center gap-2 my-[1rem] mx-[1rem]">
-  <RiMenu3Line
-    className="text-xl sm:hidden cursor-pointer flex-shrink-0"
-    onClick={() => setSidebarOpen(!sidebarOpen)}
-  />
-  NovaChat <FaChevronDown className="text-sm" />
-</span>
+            <RiMenu3Line
+            className="text-xl sm:hidden cursor-pointer flex-shrink-0"
+            onClick={() => setSidebarOpen(!sidebarOpen)}/>
+                NovaChat <FaChevronDown className="text-sm" />
+        </span>
         <div className="my-[1rem] mx-[2rem]">
           <span className="bg-[#339cff] h-[25px] w-[25px] flex items-center justify-center rounded-full">
             <FaUser />
@@ -44,13 +57,21 @@ const ChatWindow = () => {
       {/* Chat display */}
       <Chat />
 
+      {/* ClipLoader */}
+      {/* ClipLoader */}
+<div className="flex justify-center items-center py-2">
+  <ClipLoader color="#ffffff" size={30} loading={loading} />
+</div>
+
       {/* Input */}
       <div className="w-full px-[20px] sm:px-[40px] md:px-[80px] lg:px-[120px] xl:px-[200px] pb-[20px]">
         <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-2">
+
           <input
-            placeholder="Ask anything" value={prompt} onChange={(e) => setPrompt(e.target.value)}
+            placeholder="Ask anything" value={prompt} onChange={(e) => setPrompt(e.target.value)} onKeyDown={(e) => e.key === "Enter"?getReply() : ""}
             className="bg-transparent text-white outline-none flex-1 p-[20px]"
           />
+
           <div
             id="submit"
             className="cursor-pointer text-white/80 flex items-center h-[35px] w-[35px] text-[20px] hover:text-[#fff]" onClick={getReply}

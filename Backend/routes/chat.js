@@ -75,11 +75,11 @@ router.post("/chat",async (req,res) => {
     }
 
     try {
-        const thread=await Thread.findOne({threadId})
+        let thread=await Thread.findOne({threadId})
 
         if(!thread){
             // create new thread
-            thread=new thread({
+            thread=new Thread({
                 threadId,
                 title:message,
                 messages:[{role:"user",content:message}]
