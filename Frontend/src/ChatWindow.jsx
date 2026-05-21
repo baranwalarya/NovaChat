@@ -3,12 +3,12 @@ import { FaChevronDown } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import { RiMenu3Line } from "react-icons/ri";
-import { useContext,useState } from "react";
+import { useContext,useState,useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import { ClipLoader } from "react-spinners"
 
 const ChatWindow = () => {
-  const { setSidebarOpen, sidebarOpen, prompt, setPrompt, reply, setReply, currentThreadId, setCurrentThreadId } = useContext(MyContext)
+  const { setSidebarOpen, sidebarOpen, prompt, setPrompt, reply, setReply, currentThreadId, setCurrentThreadId, prevChats,setPrevChats } = useContext(MyContext)
   const [loading,setLoading] = useState(false)
 
   const getReply = async () => {
@@ -35,6 +35,23 @@ const ChatWindow = () => {
     }
     setLoading(false)
   }
+
+  // Append new chat to prev chat
+  useEffect(()=>{
+    if(prompt && reply){
+      setPrevChats(prevChats=>(
+        [...prevChats,{
+          role:"user",
+          content:prompt
+          },{
+            role:"assistant",
+            content:reply
+          }
+        ]
+      ))
+    }
+    setPrompt("")
+  },[reply])
 
   return (
     <div className="bg-[#212121] h-screen w-full flex flex-col justify-between text-center overflow-hidden pl-[60px] sm:pl-0">
