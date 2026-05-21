@@ -1,10 +1,27 @@
 import { FaEdit } from "react-icons/fa";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import logo from "./assets/blacklogo.png"  // ✅ yeh add karo
 
 function Sidebar() {
   const { sidebarOpen, setSidebarOpen } = useContext(MyContext)
+  const { allThreads, setAllThreads, currentThreadId } = useContext(MyContext)
+
+  const getAllThreads=async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/api/thread`)
+      const res=await response.json()
+      const filterData = res.map(thread=>({thread:thread.threadId, title: thread.title}))
+      console.log(filterData)
+      setAllThreads(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+      getAllThreads();
+  },[currentThreadId])
 
   return (
     <>
@@ -33,10 +50,10 @@ function Sidebar() {
 
         {/* History */}
         <ul className="m-[10px] p-[10px] h-full list-none">
-          {["thread1", "thread2", "thread3"].map((item) => (
-            <li key={item} className={`cursor-pointer py-[8px] px-[10px] mb-[2px] text-[14px] rounded-lg hover:bg-white/5 
+          {allThreads.map((thread) => (
+            <li key={thread.id} className={`cursor-pointer py-[8px] px-[10px] mb-[2px] text-[14px] rounded-lg hover:bg-white/5 
               ${sidebarOpen ? 'block' : 'hidden'} sm:block`}>
-              {item}
+              {thread.title}
             </li>
           ))}
         </ul>

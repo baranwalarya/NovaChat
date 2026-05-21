@@ -12,14 +12,15 @@ function App() {
   const [currentThreadId,setCurrentThreadId] = useState(uuidv1())
   const [prevChats,setPrevChats]=useState([])  //store all prev chats of curr thread
   const [newChats,setNewChats]=useState(true) //store all prev chats of curr thread
-
+  const [allThreads,setAllThreads] = useState([])
 
   const providerValues = {  sidebarOpen, setSidebarOpen ,
                             prompt,setPrompt,
                            reply,setReply,
                            currentThreadId,setCurrentThreadId,
                            newChats,setNewChats,
-                           prevChats,setPrevChats
+                           prevChats,setPrevChats,
+                           allThreads,setAllThreads
                         }
 
   return (

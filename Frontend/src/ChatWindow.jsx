@@ -56,7 +56,7 @@ const response = await fetch(`${BASE_URL}/api/chat`, options)
   },[reply])
 
   return (
-   <div className="bg-[#212121] h-screen w-full flex flex-col justify-between text-center overflow-hidden transition-all duration-300 sm:pl-[200px] lg:pl-80">
+   <div className="bg-[#212121] h-screen w-full flex flex-col overflow-hidden transition-all duration-300 sm:pl-[200px] lg:pl-80">
 
       {/* Navbar */}
       <div className="w-full flex justify-between items-center cursor-pointer">
