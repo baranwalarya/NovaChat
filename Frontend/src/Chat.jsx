@@ -34,7 +34,7 @@ function Chat() {
       
      <div className='flex-1 min-h-0 w-full max-w-[700px] mx-auto overflow-y-auto px-[2rem] py-[1rem]'>
 
-        {prevChats?.slice(0,-1).map((chat, idx) => (
+       {prevChats?.slice(0, latestReply !== null ? -1 : prevChats.length).map((chat, idx) => (
            <div className="flex flex-col w-full text-[14px]" key={idx}>
           {chat.role === "user" ? (
             <div className="w-full mb-2 flex justify-end">
@@ -56,6 +56,14 @@ function Chat() {
         <div key={"typing"}>
           <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
             {latestReply}
+          </ReactMarkdown>
+        </div>
+      )}
+
+      {prevChats?.messages?.length > 0 && latestReply === null && (
+        <div key={"non-typing"}>
+          <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+            {prevChats.messages[prevChats.messages.length-1]?.content}
           </ReactMarkdown>
         </div>
       )}

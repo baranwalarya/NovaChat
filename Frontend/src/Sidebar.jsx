@@ -13,7 +13,7 @@ function Sidebar() {
       const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/api/thread`)
       const res=await response.json()
       const filterData = res.map(thread=>({thread:thread.threadId, title: thread.title}))
-      console.log(filterData)
+      // console.log(filterData)
       setAllThreads(res)
     } catch (error) {
       console.log(error)
@@ -30,6 +30,22 @@ function Sidebar() {
     setReply(null)
     setCurrentThreadId(uuidv1())
     setPrevChats([])
+  }
+
+  const changeThread =async (newThreadId)=>{
+    setCurrentThreadId(newThreadId)
+
+      try{
+        const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/api/thread/${newThreadId}`)
+        const res=await response.json()
+        console.log(res)
+        setPrevChats(res)
+        setNewChats(false)
+        setReply(null)
+
+      }catch(error){
+        console.log(error)
+      }
   }
 
   return (
@@ -61,7 +77,7 @@ function Sidebar() {
         <ul className="m-[10px] p-[10px] h-full list-none">
           {allThreads.map((thread) => (
             <li key={thread.id} className={`cursor-pointer py-[8px] px-[10px] mb-[2px] text-[14px] rounded-lg hover:bg-white/5 
-              ${sidebarOpen ? 'block' : 'hidden'} sm:block`}>
+              ${sidebarOpen ? 'block' : 'hidden'} sm:block`} onClick={()=>changeThread(thread.threadId)}>
               {thread.title}
             </li>
           ))}
