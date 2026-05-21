@@ -55,10 +55,10 @@ const ChatWindow = () => {
   },[reply])
 
   return (
-    <div className="bg-[#212121] h-screen w-full flex flex-col justify-between text-center overflow-hidden pl-[60px] sm:pl-0">
+   <div className="bg-[#212121] h-screen w-full flex flex-col justify-between text-center overflow-hidden pl-0 sm:pl-[60px]">
 
       {/* Navbar */}
-      <div className="w-full flex justify-between items-center      cursor-pointer">
+      <div className="w-full flex justify-between items-center cursor-pointer">
         <span className="flex items-center gap-2 my-[1rem] mx-[1rem]">
             <RiMenu3Line
             className="text-xl sm:hidden cursor-pointer flex-shrink-0"
