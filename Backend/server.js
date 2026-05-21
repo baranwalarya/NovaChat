@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://nova-chat-eosin.vercel.app/",
+      "https://nova-chat-eosin.vercel.app",
     ],
     credentials: true,
   }),
