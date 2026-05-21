@@ -1,6 +1,7 @@
 import { FaEdit } from "react-icons/fa";
 import { useContext } from "react";
 import { MyContext } from "./MyContext.jsx";
+import logo from "./assets/blacklogo.png"  // ✅ yeh add karo
 
 function Sidebar() {
   const { sidebarOpen, setSidebarOpen } = useContext(MyContext)
@@ -22,7 +23,7 @@ function Sidebar() {
         {/* Button */}
         <button className="flex items-center justify-between w-[calc(100%-20px)] rounded-[10px] bg-transparent border border-white/80 cursor-pointer m-[10px] p-[10px] hover:bg-white/5">
           <img 
-            src="src/assets/blacklogo.png" 
+            src={logo}  // ✅ yeh change karo
             alt="gpt logo" 
             className="h-[25px] w-[25px] bg-[#fff] rounded-full object-cover flex-shrink-0"
             onClick={() => setSidebarOpen(!sidebarOpen)}
