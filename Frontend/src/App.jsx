@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { v1 as uuidv1 } from "uuid"
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   const [prompt,setPrompt] =useState("")
   const [reply,setReply] = useState(null)
   const [currentThreadId,setCurrentThreadId] = useState(uuidv1())

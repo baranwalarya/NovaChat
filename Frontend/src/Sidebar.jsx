@@ -2,10 +2,11 @@ import { FaEdit } from "react-icons/fa";
 import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import logo from "./assets/blacklogo.png"  // ✅ yeh add karo
+import {v1 as uuidv1} from "uuid"
 
 function Sidebar() {
   const { sidebarOpen, setSidebarOpen } = useContext(MyContext)
-  const { allThreads, setAllThreads, currentThreadId } = useContext(MyContext)
+  const { allThreads, setAllThreads, currentThreadId , setNewChats, setPrompt, setReply, setCurrentThreadId, setPrevChats} = useContext(MyContext)
 
   const getAllThreads=async () => {
     try {
@@ -22,6 +23,14 @@ function Sidebar() {
   useEffect(() => {
       getAllThreads();
   },[currentThreadId])
+
+  const createNewChat=() => {
+    setNewChats(true)
+    setPrompt("")
+    setReply(null)
+    setCurrentThreadId(uuidv1())
+    setPrevChats([])
+  }
 
   return (
     <>
@@ -45,7 +54,7 @@ function Sidebar() {
             className="h-[25px] w-[25px] bg-[#fff] rounded-full object-cover flex-shrink-0"
             onClick={() => setSidebarOpen(!sidebarOpen)}
           />
-          <FaEdit className={`text-white text-xl ${sidebarOpen ? 'block' : 'hidden'} sm:block`} />
+          <FaEdit className={`text-white text-xl ${sidebarOpen ? 'block' : 'hidden'} sm:block`} onClick={createNewChat}/>
         </button>
 
         {/* History */}
