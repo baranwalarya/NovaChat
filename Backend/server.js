@@ -7,9 +7,16 @@ import chatRoutes from "./routes/chat.js"
 const app=express();
 const PORT = 8080;
 
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://nova-chat-eosin.vercel.app/",
+    ],
+    credentials: true,
+  }),
+);
 app.use(express.json());
-app.use(cors());
-
 app.use("/api",chatRoutes)
 
 app.listen(PORT, () => {
