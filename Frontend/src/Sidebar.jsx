@@ -15,7 +15,9 @@ function Sidebar() {
         />
       )}
 
-      <section className={`bg-[#171717] text-[#b4b4b4] h-screen flex flex-col justify-between flex-shrink-0 z-20 transition-all duration-300 fixed sm:relative ${sidebarOpen ? 'w-[250px]' : 'w-[60px]'} sm:w-[200px] lg:w-80`}>
+      <section className={`bg-[#171717] text-[#b4b4b4] h-screen flex flex-col justify-between flex-shrink-0 z-20 transition-all duration-300 fixed
+  ${sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'} 
+  w-[250px] sm:w-[200px] lg:w-80`}>
 
         {/* Button */}
         <button className="flex items-center justify-between w-[calc(100%-20px)] rounded-[10px] bg-transparent border border-white/80 cursor-pointer m-[10px] p-[10px] hover:bg-white/5">
