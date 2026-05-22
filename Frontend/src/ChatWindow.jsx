@@ -3,7 +3,8 @@ import { FaChevronDown } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import { RiMenu3Line } from "react-icons/ri";
-import { FiX } from "react-icons/fi";
+import { FiX, FiSettings, FiLogOut } from "react-icons/fi";
+import { BsStars } from "react-icons/bs";
 import { useContext, useState, useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import { ClipLoader } from "react-spinners"
@@ -11,27 +12,20 @@ import { ClipLoader } from "react-spinners"
 const ChatWindow = () => {
   const { setSidebarOpen, sidebarOpen, prompt, setPrompt, reply, setReply, currentThreadId, setCurrentThreadId, prevChats, setPrevChats, setNewChats } = useContext(MyContext)
   const [loading, setLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const getReply = async () => {
     setLoading(true)
     setNewChats(false)
-    console.log("message ", prompt, "threadId", currentThreadId)
     const options = {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: prompt,
-        threadId: currentThreadId
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: prompt, threadId: currentThreadId })
     }
-
     try {
       const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080"
       const response = await fetch(`${BASE_URL}/api/chat`, options)
       const res = await response.json()
-      console.log(res)
       setReply(res.reply)
     } catch (error) {
       console.log(error)
@@ -40,7 +34,7 @@ const ChatWindow = () => {
   }
 
   useEffect(() => {
-    if (prompt && reply) {
+    if (reply) {
       setPrevChats(prevChats => (
         [...prevChats, {
           role: "user",
@@ -50,15 +44,27 @@ const ChatWindow = () => {
           content: reply
         }]
       ))
+      setPrompt("")
     }
-    setPrompt("")
   }, [reply])
+
+  // Bahar click karne pe band ho
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (isOpen && !e.target.closest('.dropdown-wrapper')) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isOpen])
 
   return (
     <div className="bg-[#212121] h-screen w-full flex flex-col overflow-hidden transition-all duration-300 sm:pl-[200px] lg:pl-80 justify-between sm:justify-start">
 
       {/* Navbar */}
-      <div className="w-full flex justify-between items-center cursor-pointer">
+      <div className="w-full flex justify-between items-center">
+
         <span className="flex items-center gap-2 my-[1rem] mx-[1rem]">
           {sidebarOpen ? (
             <FiX
@@ -71,12 +77,32 @@ const ChatWindow = () => {
               onClick={() => setSidebarOpen(!sidebarOpen)}
             />
           )}
-          NovaChat <FaChevronDown className="text-sm" />
+          NovaChat
+          <FaChevronDown className="text-sm" />
         </span>
-        <div className="my-[1rem] mx-[2rem]">
-          <span className="bg-[#339cff] h-[25px] w-[25px] flex items-center justify-center rounded-full">
+
+        {/* User icon + dropdown */}
+        <div className="my-[1rem] mx-[2rem] relative dropdown-wrapper">
+          <span
+            className="bg-[#339cff] h-[32px] w-[32px] flex items-center justify-center rounded-full cursor-pointer"
+            onClick={() => setIsOpen(!isOpen)}
+          >
             <FaUser />
           </span>
+
+          {isOpen && (
+            <div className="absolute top-[120%] right-0 bg-[#2f2f2f] rounded-[10px] shadow-lg z-50 min-w-[180px]">
+              <div className="px-[14px] py-[10px] text-[14px] hover:bg-white/10 cursor-pointer rounded-t-[10px] flex items-center gap-2">
+                <FiSettings className="text-[16px]" /> Settings
+              </div>
+              <div className="px-[14px] py-[10px] text-[14px] hover:bg-white/10 cursor-pointer flex items-center gap-2">
+                <BsStars className="text-[16px] text-yellow-400" /> Upgrade Plan
+              </div>
+              <div className="px-[14px] py-[10px] text-[14px] hover:bg-white/10 cursor-pointer rounded-b-[10px] flex items-center gap-2 text-red-400">
+                <FiLogOut className="text-[16px]" /> Logout
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

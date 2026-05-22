@@ -49,6 +49,24 @@ function Sidebar() {
       }
   }
 
+  const deleteThread = async (threadId) => {
+    try {
+      const response=await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/api/thread/${threadId}`, {method: 'DELETE'})
+      const res=await response.json()
+      console.log(res)
+
+      // update threads-re render
+      setAllThreads(prev=>prev.filter(thread=>thread.threadId !== threadId))
+
+      if(threadId === currentThreadId){
+        createNewChat()
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       {/* Mobile overlay */}
@@ -78,11 +96,15 @@ function Sidebar() {
         <ul className="m-[10px] p-[10px] h-full list-none">
           {allThreads.map((thread) => (
            <li key={thread.threadId} className={`group flex items-center justify-between cursor-pointer py-[8px] px-[10px] mb-[2px] text-[14px] rounded-lg hover:bg-white/5 
-  ${sidebarOpen ? 'flex' : 'hidden'} sm:flex`} onClick={()=>changeThread(thread.threadId)}>
+  ${sidebarOpen ? 'flex' : 'hidden'} sm:flex
+  ${thread.threadId === currentThreadId ? 'bg-white/10 text-white' : ''}`} onClick={()=>changeThread(thread.threadId)}>
   <span className="truncate">{thread.title}</span>
   <MdDelete 
   className="flex-shrink-0 ml-2 text-lg transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:text-red-400 hover:text-red-400" 
-  onClick={(e) => e.stopPropagation()}
+  onClick={(e) =>{ 
+    e.stopPropagation()
+    deleteThread(thread.threadId)
+  }}
 />
 </li>
           ))}
