@@ -9,11 +9,12 @@ import { MyContext } from "./MyContext.jsx";
 import { ClipLoader } from "react-spinners"
 
 const ChatWindow = () => {
-  const { setSidebarOpen, sidebarOpen, prompt, setPrompt, reply, setReply, currentThreadId, setCurrentThreadId, prevChats, setPrevChats } = useContext(MyContext)
+  const { setSidebarOpen, sidebarOpen, prompt, setPrompt, reply, setReply, currentThreadId, setCurrentThreadId, prevChats, setPrevChats, setNewChats } = useContext(MyContext)
   const [loading, setLoading] = useState(false)
 
   const getReply = async () => {
     setLoading(true)
+    setNewChats(false)
     console.log("message ", prompt, "threadId", currentThreadId)
     const options = {
       method: "POST",

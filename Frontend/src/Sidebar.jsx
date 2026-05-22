@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import logo from "./assets/blacklogo.png"  // ✅ yeh add karo
 import {v1 as uuidv1} from "uuid"
+import { MdDelete } from "react-icons/md";
 
 function Sidebar() {
   const { sidebarOpen, setSidebarOpen } = useContext(MyContext)
@@ -59,8 +60,8 @@ function Sidebar() {
       )}
 
       <section className={`bg-[#171717] text-[#b4b4b4] h-screen flex flex-col justify-between flex-shrink-0 z-20 transition-all duration-300 fixed
-  ${sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'} 
-  w-[250px] sm:w-[200px] lg:w-80`}>
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'} 
+        w-[250px] sm:w-[200px] lg:w-80`}>
 
         {/* Button */}
         <button className="flex items-center justify-between w-[calc(100%-20px)] rounded-[10px] bg-transparent border border-white/80 cursor-pointer m-[10px] p-[10px] hover:bg-white/5">
@@ -76,10 +77,14 @@ function Sidebar() {
         {/* History */}
         <ul className="m-[10px] p-[10px] h-full list-none">
           {allThreads.map((thread) => (
-            <li key={thread.id} className={`cursor-pointer py-[8px] px-[10px] mb-[2px] text-[14px] rounded-lg hover:bg-white/5 
-              ${sidebarOpen ? 'block' : 'hidden'} sm:block`} onClick={()=>changeThread(thread.threadId)}>
-              {thread.title}
-            </li>
+           <li key={thread.threadId} className={`group flex items-center justify-between cursor-pointer py-[8px] px-[10px] mb-[2px] text-[14px] rounded-lg hover:bg-white/5 
+  ${sidebarOpen ? 'flex' : 'hidden'} sm:flex`} onClick={()=>changeThread(thread.threadId)}>
+  <span className="truncate">{thread.title}</span>
+  <MdDelete 
+  className="flex-shrink-0 ml-2 text-lg transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:text-red-400 hover:text-red-400" 
+  onClick={(e) => e.stopPropagation()}
+/>
+</li>
           ))}
         </ul>
 
